@@ -13,10 +13,10 @@ export default function Home() {
     <div className="flex h-screen bg-background">
       <Sidebar />
       <main className="flex-1 flex flex-col">
-        <div className="flex items-center justify-between p-4 border-b">
+        <div className="sm:flex justify-end w-full items-center sm:justify-between p-4 border-b">
           <Button
             variant="outline"
-            className="w-[300px] justify-start text-muted-foreground"
+            className=" w-full pl-12 sm:pl-4 justify-start text-muted-foreground"
             onClick={() => {}}
           >
             <Search className="mr-2 h-4 w-4" />

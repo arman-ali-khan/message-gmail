@@ -1,5 +1,6 @@
 "use client";
-
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -60,7 +61,7 @@ export function ComposeButton() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+      <DialogTrigger className=" fixed z-40 bottom-4 right-4" asChild>
         <Button className="px-6">
           <PenSquare className="mr-2 h-4 w-4" />
           Compose
@@ -73,6 +74,8 @@ export function ComposeButton() {
             Compose and send your message to multiple recipients
           </DialogDescription>
         </DialogHeader>
+         <ScrollArea className={cn("h-[calc(100vh-10rem)]")}
+            >
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
             <Label htmlFor="recipients">To</Label>
@@ -100,7 +103,7 @@ export function ComposeButton() {
             </div>
           </div>
         </div>
-        <div className="flex justify-end gap-2">
+        <div className="flex justify-start gap-2">
           <Button variant="outline" onClick={() => setOpen(false)}>
             Cancel
           </Button>
@@ -109,6 +112,7 @@ export function ComposeButton() {
           </Button>
           <Button onClick={handleSend}>Send</Button>
         </div>
+           </ScrollArea>
       </DialogContent>
     </Dialog>
   );
