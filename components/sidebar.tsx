@@ -76,7 +76,7 @@ export function Sidebar() {
               >
                 <UserCircle className="h-8 w-8" />
                 {!isCollapsed && (
-                  <h2 className="ml-2 text-lg font-semibold">Email App</h2>
+                  <h2 className="ml-2 text-lg font-semibold">Arman Khan</h2>
                 )}
               </Link>
               {!isCollapsed && (

@@ -9,6 +9,8 @@ import { Search } from "lucide-react";
 import { useState } from "react";
 
 export default function Home() {
+  const [searchOpen, setSearchOpen] = useState(false);
+
   return (
     <div className="flex h-screen bg-background">
       <Sidebar />
@@ -16,8 +18,8 @@ export default function Home() {
         <div className="sm:flex justify-end w-full items-center sm:justify-between p-4 border-b">
           <Button
             variant="outline"
-            className=" w-full pl-12 sm:pl-4 justify-start text-muted-foreground"
-            onClick={() => {}}
+            className="w-full pl-12 sm:pl-4 justify-start text-muted-foreground"
+            onClick={() => setSearchOpen(true)}
           >
             <Search className="mr-2 h-4 w-4" />
             Search messages...
@@ -25,6 +27,7 @@ export default function Home() {
           <ComposeButton />
         </div>
         <MessageList />
+        <SearchDialog open={searchOpen} onOpenChange={setSearchOpen} />
       </main>
     </div>
   );

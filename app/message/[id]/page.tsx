@@ -3,7 +3,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Archive, ArrowLeft, MoreVertical, Reply, Star, Trash2 } from "lucide-react";
+import { Archive, ArrowLeft, Forward, MoreVertical, Reply, Share2, Smile, Star, Trash2 } from "lucide-react";
 import Link from "next/link";
 import {
   DropdownMenu,
@@ -45,15 +45,15 @@ export default function MessagePage({ params }: { params: { id: string } }) {
   const [showReply, setShowReply] = useState(false);
 
   return (
-    <div className="container mx-auto py-8">
-      <div className="mb-6 flex items-center justify-between">
+    <div className="container mx-auto m-0 py-8 w-full">
+      <Card variant="ghost" className="mb-6 px-3 py-2 sticky flex z-40 top-0 w-full flex items-center justify-between">
         <Link href="/">
           <Button variant="ghost" size="sm">
-            <ArrowLeft className="mr-2 h-4 w-4" />
+            <ArrowLeft className="pr-2 h-4 w-4" />
             Back to Inbox
           </Button>
         </Link>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-0">
           <Button variant="ghost" size="icon">
             <Archive className="h-4 w-4" />
           </Button>
@@ -70,41 +70,35 @@ export default function MessagePage({ params }: { params: { id: string } }) {
               <DropdownMenuItem>Mark as unread</DropdownMenuItem>
               <DropdownMenuItem>Mark as spam</DropdownMenuItem>
               <DropdownMenuItem className="text-destructive">
-                <Trash2 className="mr-2 h-4 w-4" />
+                <Trash2 className="pr-2 h-4 w-4" />
                 Delete
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-      </div>
+      </Card>
 
-      <Card className="p-6">
+      <Card className="p-6 mt-12">
         <div className="mb-6">
           <h1 className="text-2xl font-bold mb-4">{message.subject}</h1>
-          <div className="flex items-start justify-between">
-            <div className="flex items-center gap-4">
-              <Avatar className="h-12 w-12">
-                <AvatarImage src={message.avatar} alt={message.sender} />
-                <AvatarFallback>
-                  {message.sender.split(" ").map((n) => n[0]).join("")}
-                </AvatarFallback>
-              </Avatar>
-              <div>
-                <div className="flex items-center gap-2">
-                  <p className="font-medium">{message.sender}</p>
-                  <span className="text-sm text-muted-foreground">
-                    &lt;{message.email}&gt;
-                  </span>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  {message.date} at {message.time}
-                </p>
+          <div className="flex items-start">
+            <Avatar className="h-12 w-12">
+              <AvatarImage src={message.avatar} alt={message.sender} />
+              <AvatarFallback>
+                {message.sender.split(" ").map((n) => n[0]).join("")}
+              </AvatarFallback>
+            </Avatar>
+            <div className="ml-4">
+              <div className="flex items-center gap-2">
+                <p className="font-medium">{message.sender}</p>
+                <span className="text-sm text-muted-foreground">
+                  &lt;{message.email}&gt;
+                </span>
               </div>
+              <p className="text-sm text-muted-foreground">
+                {message.date} at {message.time}
+              </p>
             </div>
-            <Button variant="outline" className="gap-2" onClick={() => setShowReply(true)}>
-              <Reply className="h-4 w-4" />
-              Reply
-            </Button>
           </div>
         </div>
 
@@ -133,6 +127,27 @@ export default function MessagePage({ params }: { params: { id: string } }) {
             </div>
           </div>
         )}
+
+        <div className="mt-6 border-t pt-6">
+          <div className="flex items-center gap-2">
+            <Button variant="outline" className="gap-2" onClick={() => setShowReply(true)}>
+              <Reply className="h-4 w-4" />
+              Reply
+            </Button>
+            <Button variant="outline" className="gap-2">
+              <Forward className="h-4 w-4" />
+              Forward
+            </Button>
+            <Button variant="outline" className="gap-2">
+              <Smile className="h-4 w-4" />
+              React
+            </Button>
+            <Button variant="outline" className="gap-2">
+              <Share2 className="h-4 w-4" />
+              Share
+            </Button>
+          </div>
+        </div>
       </Card>
 
       {showReply && (
