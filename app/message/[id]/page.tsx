@@ -11,13 +11,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { MessageReply } from "@/components/message-reply";
+import { useState } from "react";
 
-const message = {
-  id: 1,
-  sender: "John Doe",
-  email: "john@example.com",
-  subject: "Meeting Tomorrow",
-  content: `<p>Hi there,</p>
+const messages = [
+  {
+    id: 1,
+    sender: "John Doe",
+    email: "john@example.com",
+    subject: "Meeting Tomorrow",
+    content: `<p>Hi there,</p>
     <p>I hope this email finds you well. I wanted to discuss the project details for our upcoming meeting tomorrow.</p>
     <p>Here are the key points we need to cover:</p>
     <ul>
@@ -27,16 +30,20 @@ const message = {
     </ul>
     <p>Please let me know if you need any additional information before the meeting.</p>
     <p>Best regards,<br>John</p>`,
-  time: "10:30 AM",
-  date: "Mar 15, 2024",
-  avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=96&h=96&q=80&fit=crop",
-  attachments: [
-    { name: "presentation.pdf", size: "2.4 MB" },
-    { name: "budget.xlsx", size: "1.2 MB" },
-  ],
-};
+    time: "10:30 AM",
+    date: "Mar 15, 2024",
+    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=96&h=96&q=80&fit=crop",
+    attachments: [
+      { name: "presentation.pdf", size: "2.4 MB" },
+      { name: "budget.xlsx", size: "1.2 MB" },
+    ],
+  },
+];
 
 export default function MessagePage({ params }: { params: { id: string } }) {
+  const message = messages.find((m) => m.id.toString() === params.id) || messages[0];
+  const [showReply, setShowReply] = useState(false);
+
   return (
     <div className="container mx-auto py-8">
       <div className="mb-6 flex items-center justify-between">
@@ -94,7 +101,7 @@ export default function MessagePage({ params }: { params: { id: string } }) {
                 </p>
               </div>
             </div>
-            <Button variant="outline" className="gap-2">
+            <Button variant="outline" className="gap-2" onClick={() => setShowReply(true)}>
               <Reply className="h-4 w-4" />
               Reply
             </Button>
@@ -127,6 +134,19 @@ export default function MessagePage({ params }: { params: { id: string } }) {
           </div>
         )}
       </Card>
+
+      {showReply && (
+        <MessageReply
+          originalMessage={{
+            sender: message.sender,
+            subject: message.subject,
+            date: message.date,
+            time: message.time,
+            content: message.content,
+          }}
+          onClose={() => setShowReply(false)}
+        />
+      )}
     </div>
   );
 }
