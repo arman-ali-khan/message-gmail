@@ -75,7 +75,7 @@ const initialMessages = [
 export function MessageList({ currentFolder = "inbox" }) {
   const [messages, setMessages] = useState(initialMessages);
   const [sortBy, setSortBy] = useState("date");
-  const [selectedMessage, setSelectedMessage] = useState<number | null>(null);
+  const [selectedMessages, setSelectedMessages] = useState<number[]>([]);
   const [page, setPage] = useState(1);
   const [shortView, setShortView] = useState(false);
   const messagesPerPage = 50;
@@ -134,9 +134,9 @@ export function MessageList({ currentFolder = "inbox" }) {
   };
 
   const handleDeleteSelected = () => {
-    if (selectedMessage) {
-      setMessages(messages.filter(message => message.id !== selectedMessage));
-      setSelectedMessage(null);
+    if (selectedMessages.length > 0) {
+      setMessages(messages.filter(message => !selectedMessages.includes(message.id)));
+      setSelectedMessages([]);
     }
   };
 
@@ -153,6 +153,22 @@ export function MessageList({ currentFolder = "inbox" }) {
     );
   };
 
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedMessages(sortedMessages.map(message => message.id));
+    } else {
+      setSelectedMessages([]);
+    }
+  };
+
+  const handleSelectMessage = (checked: boolean, messageId: number) => {
+    if (checked) {
+      setSelectedMessages([...selectedMessages, messageId]);
+    } else {
+      setSelectedMessages(selectedMessages.filter(id => id !== messageId));
+    }
+  };
+
   const totalPages = Math.ceil(sortedMessages.length / messagesPerPage);
   const startIndex = (page - 1) * messagesPerPage;
   const endIndex = startIndex + messagesPerPage;
@@ -165,10 +181,12 @@ export function MessageList({ currentFolder = "inbox" }) {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => setShortView(!shortView)}
             className="hover:bg-gray-100 dark:hover:bg-gray-800"
           >
-            <Checkbox checked={shortView} />
+            <Checkbox 
+              checked={selectedMessages.length === sortedMessages.length && sortedMessages.length > 0}
+              onCheckedChange={(checked) => handleSelectAll(checked as boolean)}
+            />
           </Button>
           <Button
             variant="ghost"
@@ -178,16 +196,20 @@ export function MessageList({ currentFolder = "inbox" }) {
           >
             <RefreshCcw className="h-4 w-4" />
           </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleMarkAllRead}
-            className="hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <CheckSquare className="h-4 w-4 mr-2" />
-            Mark all as read
-          </Button>
-          {selectedMessage && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <MoreVertical className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem onClick={handleMarkAllRead}>
+                <CheckSquare className="h-4 w-4 mr-2" />
+                Mark all as read
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          {selectedMessages.length > 0 && (
             <Button
               variant="destructive"
               size="sm"
@@ -195,7 +217,7 @@ export function MessageList({ currentFolder = "inbox" }) {
               className="ml-2"
             >
               <Trash2 className="h-4 w-4 mr-2" />
-              Delete Selected
+              Delete Selected ({selectedMessages.length})
             </Button>
           )}
         </div>
@@ -221,16 +243,6 @@ export function MessageList({ currentFolder = "inbox" }) {
               <ChevronDown className="h-4 w-4 -rotate-90" />
             </Button>
           </div>
-          <Select value={sortBy} onValueChange={setSortBy}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Sort by" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="date">Sort by Date</SelectItem>
-              <SelectItem value="sender">Sort by Sender</SelectItem>
-              <SelectItem value="subject">Sort by Subject</SelectItem>
-            </SelectContent>
-          </Select>
         </div>
       </div>
       <ScrollArea className="flex-1">
@@ -240,13 +252,11 @@ export function MessageList({ currentFolder = "inbox" }) {
               key={message.id}
               className={`flex items-center gap-2 rounded-lg p-2 hover:bg-muted ${
                 message.unread ? "font-semibold bg-muted/50" : ""
-              } ${message.id === selectedMessage ? "bg-muted" : ""}`}
+              } ${selectedMessages.includes(message.id) ? "bg-muted" : ""}`}
             >
               <Checkbox
-                checked={message.id === selectedMessage}
-                onCheckedChange={(checked) => {
-                  setSelectedMessage(checked ? message.id : null);
-                }}
+                checked={selectedMessages.includes(message.id)}
+                onCheckedChange={(checked) => handleSelectMessage(checked as boolean, message.id)}
               />
               <Link href={`/message/${message.id}`} className="flex-1 flex items-center gap-2">
                 <Avatar className="h-9 w-9">
