@@ -1,9 +1,3 @@
-const withPWA = require('next-pwa')({
-  dest: 'public',
-  register: true,
-  skipWaiting: true,
-});
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
@@ -11,4 +5,5 @@ const nextConfig = {
   },
 };
 
-module.exports = withPWA(nextConfig);
+// Temporarily disable PWA to resolve chunk loading issues
+module.exports = nextConfig;

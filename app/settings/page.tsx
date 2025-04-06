@@ -6,133 +6,210 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Moon, Sun, UserCircle } from "lucide-react";
-import { useTheme } from "next-themes";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import Link from "next/link";
+import { useState } from "react";
 
 export default function SettingsPage() {
-  const { theme, setTheme } = useTheme();
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    // Simulate API call
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  };
 
   return (
     <div className="container mx-auto py-10">
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle>Settings</CardTitle>
-            <Link href="/">
-              <Button variant="outline">Back to Messages</Button>
+            <CardTitle>Profile Settings</CardTitle>
+            <Link href="/profile">
+              <Button variant="outline">View Profile</Button>
             </Link>
           </div>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="profile" className="space-y-6">
-            <TabsList>
-              <TabsTrigger value="profile">Profile</TabsTrigger>
-              <TabsTrigger value="appearance">Appearance</TabsTrigger>
-              <TabsTrigger value="blocked">Blocked Users</TabsTrigger>
-              <TabsTrigger value="folders">Folders</TabsTrigger>
-            </TabsList>
+          <form onSubmit={handleSubmit} className="space-y-8">
+            {/* Profile Photo */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium">Profile Photo</h3>
+              <div className="flex items-center gap-4">
+                <Avatar className="h-24 w-24">
+                  <AvatarImage
+                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=96&h=96&q=80&fit=crop"
+                    alt="User"
+                  />
+                  <AvatarFallback>JD</AvatarFallback>
+                </Avatar>
+                <Button variant="outline">Change Photo</Button>
+              </div>
+            </div>
 
-            <TabsContent value="profile" className="space-y-6">
-              <div className="flex items-start gap-8">
-                <div className="flex flex-col items-center space-y-4">
-                  <Avatar className="h-32 w-32">
-                    <AvatarImage
-                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=128&h=128&q=80&fit=crop"
-                      alt="User"
-                    />
-                    <AvatarFallback>JD</AvatarFallback>
-                  </Avatar>
-                  <Button variant="outline" size="sm">
-                    Change Photo
-                  </Button>
+            <Separator />
+
+            {/* Basic Information */}
+            <div className="grid gap-4">
+              <h3 className="text-lg font-medium">Basic Information</h3>
+              
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="fullName">Full Name</Label>
+                  <Input id="fullName" defaultValue="John Michael Doe" />
                 </div>
-                <div className="flex-1 space-y-6">
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Full Name</Label>
-                      <Input id="name" defaultValue="John Doe" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="phone">Phone Number</Label>
-                      <Input id="phone" defaultValue="+1234567890" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
-                      <Input id="email" type="email" defaultValue="john@example.com" />
-                    </div>
-                  </div>
-                  <div className="flex justify-end gap-2">
-                    <Button variant="outline">Cancel</Button>
-                    <Button>Save Changes</Button>
-                  </div>
+                <div className="space-y-2">
+                  <Label htmlFor="nickname">Nickname</Label>
+                  <Input id="nickname" defaultValue="Johnny" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="username">Username</Label>
+                  <Input id="username" defaultValue="johndoe" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Phone Number</Label>
+                  <Input id="phone" type="tel" defaultValue="+1234567890" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="gender">Gender</Label>
+                  <Select defaultValue="male">
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select gender" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="male">Male</SelectItem>
+                      <SelectItem value="female">Female</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="city">City</Label>
+                  <Input id="city" defaultValue="San Francisco" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="country">Country</Label>
+                  <Input id="country" defaultValue="United States" />
                 </div>
               </div>
-            </TabsContent>
 
-            <TabsContent value="appearance" className="space-y-6">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="space-y-1">
-                    <h4 className="text-sm font-semibold">Theme</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Select your preferred theme
-                    </p>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Sun className="h-4 w-4" />
-                    <Switch
-                      checked={theme === "dark"}
-                      onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
-                    />
-                    <Moon className="h-4 w-4" />
-                  </div>
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="bio">Bio</Label>
+                <Textarea
+                  id="bio"
+                  defaultValue="Senior Software Engineer passionate about building great products"
+                  className="min-h-[100px]"
+                />
               </div>
-            </TabsContent>
+            </div>
 
-            <TabsContent value="blocked" className="space-y-6">
+            <Separator />
+
+            {/* Education */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium">Education</h3>
               <div className="space-y-4">
-                <div className="flex items-center gap-4">
-                  <Input placeholder="Add user to block list..." />
-                  <Button>Add</Button>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label>School/University</Label>
+                    <Input defaultValue="Stanford University" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Degree</Label>
+                    <Input defaultValue="Master's in Computer Science" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Year</Label>
+                    <Input defaultValue="2018-2020" />
+                  </div>
                 </div>
-                <div className="space-y-4">
-                  {["user1", "user2", "user3"].map((user) => (
-                    <div key={user} className="flex items-center justify-between rounded-lg border p-4">
-                      <div className="flex items-center gap-4">
-                        <UserCircle className="h-8 w-8" />
-                        <div>
-                          <p className="font-medium">@{user}</p>
-                          <p className="text-sm text-muted-foreground">Blocked on 01/01/2024</p>
-                        </div>
-                      </div>
-                      <Button variant="destructive" size="sm">Unblock</Button>
+                <Button variant="outline" type="button">Add Education</Button>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Experience */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium">Experience</h3>
+              <div className="space-y-4">
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label>Company</Label>
+                    <Input defaultValue="Google" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Position</Label>
+                    <Input defaultValue="Senior Software Engineer" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Duration</Label>
+                    <Input defaultValue="2020 - Present" />
+                  </div>
+                </div>
+                <Button variant="outline" type="button">Add Experience</Button>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Skills */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium">Skills</h3>
+              <div className="space-y-4">
+                <div className="flex flex-wrap gap-2">
+                  {["JavaScript", "TypeScript", "React", "Node.js", "Python", "AWS"].map((skill) => (
+                    <div key={skill} className="flex items-center gap-2 rounded-full bg-secondary px-3 py-1">
+                      <span>{skill}</span>
+                      <button className="text-muted-foreground hover:text-foreground">&times;</button>
                     </div>
                   ))}
                 </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="folders" className="space-y-6">
-              <div className="space-y-4">
-                <div className="flex items-center gap-4">
-                  <Input placeholder="New folder name..." />
-                  <Button>Add Folder</Button>
+                <div className="flex gap-2">
+                  <Input placeholder="Add a skill" />
+                  <Button type="button">Add</Button>
                 </div>
-                <div className="space-y-4">
-                  {["Work", "Personal", "Projects"].map((folder) => (
-                    <div key={folder} className="flex items-center justify-between rounded-lg border p-4">
-                      <p className="font-medium">{folder}</p>
-                      <Button variant="destructive" size="sm">Delete</Button>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Hobbies */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium">Hobbies</h3>
+              <div className="space-y-4">
+                <div className="flex flex-wrap gap-2">
+                  {["Photography", "Traveling", "Reading", "Hiking", "Gaming"].map((hobby) => (
+                    <div key={hobby} className="flex items-center gap-2 rounded-full bg-secondary px-3 py-1">
+                      <span>{hobby}</span>
+                      <button className="text-muted-foreground hover:text-foreground">&times;</button>
                     </div>
                   ))}
                 </div>
+                <div className="flex gap-2">
+                  <Input placeholder="Add a hobby" />
+                  <Button type="button">Add</Button>
+                </div>
               </div>
-            </TabsContent>
-          </Tabs>
+            </div>
+
+            <div className="flex justify-end gap-4">
+              <Button variant="outline" type="button">Cancel</Button>
+              <Button type="submit" disabled={loading}>
+                {loading ? "Saving..." : "Save Changes"}
+              </Button>
+            </div>
+          </form>
         </CardContent>
       </Card>
     </div>
