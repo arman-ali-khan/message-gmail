@@ -5,6 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Archive, ArrowLeft, Forward, MoreVertical, Reply, Share2, Smile, Star, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { Sidebar } from "@/components/sidebar";
+import { MessageList } from "@/components/message-list";
+import { ComposeButton } from "@/components/compose-button";
+import { Search } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,6 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MessageReply } from "@/components/message-reply";
 import { useState } from "react";
+import Layout from "@/app/message-layut";
 
 const messages = [
   {
@@ -45,8 +50,9 @@ export default function MessagePage({ params }: { params: { id: string } }) {
   const [showReply, setShowReply] = useState(false);
 
   return (
-    <div className="container mx-auto m-0 py-8 w-full">
-      <Card variant="ghost" className="mb-6 px-3 py-2 sticky flex z-40 top-0 w-full flex items-center justify-between">
+    <Layout>
+        <div className="container mx-auto m-0 py-8 w-full">
+      <Card className="mb-6 px-3 py-2 sticky z-40 top-0 w-full flex items-center justify-between">
         <Link href="/">
           <Button variant="ghost" size="sm">
             <ArrowLeft className="pr-2 h-4 w-4" />
@@ -163,5 +169,7 @@ export default function MessagePage({ params }: { params: { id: string } }) {
         />
       )}
     </div>
+    </Layout>
+  
   );
 }

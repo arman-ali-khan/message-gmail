@@ -44,7 +44,7 @@ export function Sidebar() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   return (
-    <>
+    <div>
       <Button
         variant="ghost"
         size="icon"
@@ -56,7 +56,7 @@ export function Sidebar() {
 
       <div
         className={cn(
-          "fixed inset-y-0 left-0 z-30 flex flex-col border-r bg-background transition-transform lg:static",
+          "fixed inset-y-0 left-0 z-30 flex flex-col border-r bg-background transition-transform lg:sticky lg:top-0",
           {
             "translate-x-0": isMobileOpen,
             "-translate-x-full lg:translate-x-0": !isMobileOpen,
@@ -65,7 +65,7 @@ export function Sidebar() {
           }
         )}
       >
-        <div className="space-y-4 py-4 flex flex-col h-full">
+        <div  className={`fixed top-0 space-y-4 py-4 flex flex-col h-full ${isCollapsed?'w-24':'w-56'}`}>
           <div className="px-3 py-2">
             <div className={`flex mx-auto ${isCollapsed ? 'justify-center':'justify-between'}  items-center mb-8 relative`}>
               <Link
@@ -92,7 +92,7 @@ export function Sidebar() {
                 "px-2": isCollapsed,
               })}
             >
-              <div className="space-y-1">
+              <div className="space-y-1 flex flex-col">
                 {sidebarItems.map((item) => (
                   <Link key={item.href} href={item.href}>
                     <Button
@@ -173,6 +173,6 @@ export function Sidebar() {
           onClick={() => setIsMobileOpen(false)}
         />
       )}
-    </>
+    </div>
   );
 }
