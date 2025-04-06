@@ -52,7 +52,7 @@ export default function MessagePage({ params }: { params: { id: string } }) {
   return (
     <Layout>
         <div className="container mx-auto m-0 py-8 w-full">
-      <Card className="mb-6 px-3 py-2 sticky z-40 top-0 w-full flex items-center justify-between">
+      <Card className="mb-6 px-3 py-2 sticky z-40 top-[73px] w-full flex items-center justify-between">
         <Link href="/">
           <Button variant="ghost" size="sm">
             <ArrowLeft className="pr-2 h-4 w-4" />

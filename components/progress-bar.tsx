@@ -9,6 +9,7 @@ export default function NextProgressBar() {
       color="#29D"
       options={{ showSpinner: false }}
       shallowRouting
+      delay={100}
     />
   );
 }

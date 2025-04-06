@@ -54,7 +54,7 @@ export function MessageReply({ originalMessage, onClose }: MessageReplyProps) {
   };
 
   return (
-    <div className="fixed inset-x-0 bottom-0 bg-background border-t shadow-lg">
+    <div className="fixed inset-x-0 z-40 bottom-0 bg-background border-t shadow-lg">
       <div className="container mx-auto max-w-5xl">
         <div className="flex items-center justify-between p-2 border-b bg-muted/50">
           <div className="flex items-center gap-2">

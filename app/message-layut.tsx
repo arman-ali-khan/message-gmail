@@ -13,10 +13,9 @@ export default function Layout({children}: {children: React.ReactNode}) {
 
   return (
     <div className="flex h-screen bg-background">
-       
       <Sidebar />
       <main className="flex-1 flex flex-col">
-        <div className="sm:flex justify-end w-full items-center sm:justify-between p-4 border-b">
+        <div className="sm:flex sticky z-50 bg-background top-0 right-0 left-0 justify-end w-auto items-center sm:justify-between p-4 border-b">
           <Button
             variant="outline"
             className="w-full pl-12 sm:pl-4 justify-start text-muted-foreground"
@@ -27,7 +26,9 @@ export default function Layout({children}: {children: React.ReactNode}) {
           </Button>
           <ComposeButton />
         </div>
-        {children}
+        <div className="mt-[20px]">
+          {children}
+        </div>
         <SearchDialog open={searchOpen} onOpenChange={setSearchOpen} />
       </main>
     </div>
