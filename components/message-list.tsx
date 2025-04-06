@@ -19,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const initialMessages = [
   {
@@ -74,8 +75,9 @@ const initialMessages = [
 export function MessageList({ currentFolder = "inbox" }) {
   const [messages, setMessages] = useState(initialMessages);
   const [sortBy, setSortBy] = useState("date");
-  const [selectedMessages, setSelectedMessages] = useState<number[]>([]);
+  const [selectedMessage, setSelectedMessage] = useState<number | null>(null);
   const [page, setPage] = useState(1);
+  const [shortView, setShortView] = useState(false);
   const messagesPerPage = 50;
 
   const filteredMessages = messages.filter((message) => {
@@ -131,6 +133,13 @@ export function MessageList({ currentFolder = "inbox" }) {
     );
   };
 
+  const handleDeleteSelected = () => {
+    if (selectedMessage) {
+      setMessages(messages.filter(message => message.id !== selectedMessage));
+      setSelectedMessage(null);
+    }
+  };
+
   const handleRefresh = () => {
     // In a real app, this would fetch new messages
     console.log("Refreshing messages...");
@@ -144,14 +153,6 @@ export function MessageList({ currentFolder = "inbox" }) {
     );
   };
 
-  const handleSelectMessage = (id: number) => {
-    setSelectedMessages((prev) =>
-      prev.includes(id)
-        ? prev.filter((messageId) => messageId !== id)
-        : [...prev, id]
-    );
-  };
-
   const totalPages = Math.ceil(sortedMessages.length / messagesPerPage);
   const startIndex = (page - 1) * messagesPerPage;
   const endIndex = startIndex + messagesPerPage;
@@ -161,6 +162,14 @@ export function MessageList({ currentFolder = "inbox" }) {
     <div className="flex-1 flex flex-col">
       <div className="flex items-center justify-between px-4 py-2 border-b">
         <div className="flex items-center space-x-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setShortView(!shortView)}
+            className="hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            <Checkbox checked={shortView} />
+          </Button>
           <Button
             variant="ghost"
             size="icon"
@@ -178,6 +187,17 @@ export function MessageList({ currentFolder = "inbox" }) {
             <CheckSquare className="h-4 w-4 mr-2" />
             Mark all as read
           </Button>
+          {selectedMessage && (
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={handleDeleteSelected}
+              className="ml-2"
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              Delete Selected
+            </Button>
+          )}
         </div>
         <div className="flex items-center space-x-2">
           <span className="text-sm text-muted-foreground">
@@ -216,18 +236,19 @@ export function MessageList({ currentFolder = "inbox" }) {
       <ScrollArea className="flex-1">
         <div className="space-y-1 p-2">
           {currentMessages.map((message) => (
-            <Link href={`/message/${message.id}`} key={message.id}>
-              <div
-                className={`flex items-center gap-2 rounded-lg p-2 hover:bg-muted ${
-                  message.unread ? "font-semibold bg-muted/50" : ""
-                } ${selectedMessages.includes(message.id) ? "bg-muted" : ""}`}
-                onClick={(e) => {
-                  if (e.ctrlKey || e.metaKey) {
-                    e.preventDefault();
-                    handleSelectMessage(message.id);
-                  }
+            <div
+              key={message.id}
+              className={`flex items-center gap-2 rounded-lg p-2 hover:bg-muted ${
+                message.unread ? "font-semibold bg-muted/50" : ""
+              } ${message.id === selectedMessage ? "bg-muted" : ""}`}
+            >
+              <Checkbox
+                checked={message.id === selectedMessage}
+                onCheckedChange={(checked) => {
+                  setSelectedMessage(checked ? message.id : null);
                 }}
-              >
+              />
+              <Link href={`/message/${message.id}`} className="flex-1 flex items-center gap-2">
                 <Avatar className="h-9 w-9">
                   <AvatarImage src={message.avatar} alt={message.sender} />
                   <AvatarFallback>
@@ -244,58 +265,54 @@ export function MessageList({ currentFolder = "inbox" }) {
                   <p className={`line-clamp-1 text-sm ${message.unread ? "font-medium" : ""}`}>
                     {message.subject}
                   </p>
-                  <p className="line-clamp-1 text-sm text-muted-foreground">
-                    {message.preview}
-                  </p>
+                  {!shortView && (
+                    <p className="line-clamp-1 text-sm text-muted-foreground">
+                      {message.preview}
+                    </p>
+                  )}
                 </div>
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleStar(message.id);
-                    }}
-                  >
-                    <Star
-                      className={`h-4 w-4 ${
-                        message.isStarred ? "fill-yellow-400 text-yellow-400" : ""
-                      }`}
-                    />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleArchive(message.id);
-                    }}
-                  >
-                    <Archive className="h-4 w-4" />
-                  </Button>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild onClick={(e) => e.preventDefault()}>
-                      <Button variant="ghost" size="icon">
-                        <MoreVertical className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" onClick={(e) => e.preventDefault()}>
-                      <DropdownMenuItem>Mark as unread</DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleSpam(message.id)}>
-                        Mark as spam
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        className="text-destructive"
-                        onClick={() => handleTrash(message.id)}
-                      >
-                        <Trash2 className="mr-2 h-4 w-4" />
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
+              </Link>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleStar(message.id)}
+                >
+                  <Star
+                    className={`h-4 w-4 ${
+                      message.isStarred ? "fill-yellow-400 text-yellow-400" : ""
+                    }`}
+                  />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleArchive(message.id)}
+                >
+                  <Archive className="h-4 w-4" />
+                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                      <MoreVertical className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem>Mark as unread</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleSpam(message.id)}>
+                      Mark as spam
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="text-destructive"
+                      onClick={() => handleTrash(message.id)}
+                    >
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      Delete
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
       </ScrollArea>
