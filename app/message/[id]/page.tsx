@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MessageReply } from "@/components/message-reply";
+import { MessageForward } from "@/components/message-forward";
 import { useState } from "react";
 import Layout from "@/app/message-layut";
 
@@ -48,128 +49,133 @@ const messages = [
 export default function MessagePage({ params }: { params: { id: string } }) {
   const message = messages.find((m) => m.id.toString() === params.id) || messages[0];
   const [showReply, setShowReply] = useState(false);
+  const [showForward, setShowForward] = useState(false);
 
   return (
     <Layout>
-        <div className="container mx-auto m-0 py-8 w-full">
-      <Card className="mb-6 px-3 py-2 sticky z-40 top-[73px] w-full flex items-center justify-between">
-        <Link href="/">
-          <Button variant="ghost" size="sm">
-            <ArrowLeft className="pr-2 h-4 w-4" />
-            Back to Inbox
-          </Button>
-        </Link>
-        <div className="flex items-center gap-0">
-          <Button variant="ghost" size="icon">
-            <Archive className="h-4 w-4" />
-          </Button>
-          <Button variant="ghost" size="icon">
-            <Star className="h-4 w-4" />
-          </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <MoreVertical className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem>Mark as unread</DropdownMenuItem>
-              <DropdownMenuItem>Mark as spam</DropdownMenuItem>
-              <DropdownMenuItem className="text-destructive">
-                <Trash2 className="pr-2 h-4 w-4" />
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </Card>
-
-      <Card className="p-6 mt-12">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold mb-4">{message.subject}</h1>
-          <div className="flex items-start">
-            <Avatar className="h-12 w-12">
-              <AvatarImage src={message.avatar} alt={message.sender} />
-              <AvatarFallback>
-                {message.sender.split(" ").map((n) => n[0]).join("")}
-              </AvatarFallback>
-            </Avatar>
-            <div className="ml-4">
-              <div className="flex items-center gap-2">
-                <p className="font-medium">{message.sender}</p>
-                <span className="text-sm text-muted-foreground">
-                  &lt;{message.email}&gt;
-                </span>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                {message.date} at {message.time}
-              </p>
-            </div>
+      <div className="container mx-auto m-0 py-8 w-full">
+        <Card className="mb-6 px-3 py-2 sticky z-40 top-[73px] w-full flex items-center justify-between">
+          <Link href="/">
+            <Button variant="ghost" size="sm">
+              <ArrowLeft className="pr-2 h-4 w-4" />
+              Back to Inbox
+            </Button>
+          </Link>
+          <div className="flex items-center gap-0">
+            <Button variant="ghost" size="icon">
+              <Archive className="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="icon">
+              <Star className="h-4 w-4" />
+            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <MoreVertical className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem>Mark as unread</DropdownMenuItem>
+                <DropdownMenuItem>Mark as spam</DropdownMenuItem>
+                <DropdownMenuItem className="text-destructive">
+                  <Trash2 className="pr-2 h-4 w-4" />
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
-        </div>
+        </Card>
 
-        <div className="prose prose-sm max-w-none dark:prose-invert" dangerouslySetInnerHTML={{ __html: message.content }} />
-
-        {message.attachments.length > 0 && (
-          <div className="mt-6 border-t pt-6">
-            <h2 className="text-sm font-semibold mb-3">Attachments</h2>
-            <div className="grid gap-2">
-              {message.attachments.map((attachment) => (
-                <div
-                  key={attachment.name}
-                  className="flex items-center justify-between rounded-lg border p-3"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium">{attachment.name}</span>
-                    <span className="text-sm text-muted-foreground">
-                      ({attachment.size})
-                    </span>
-                  </div>
-                  <Button variant="outline" size="sm">
-                    Download
-                  </Button>
+        <Card className="p-6 mt-12">
+          <div className="mb-6">
+            <h1 className="text-2xl font-bold mb-4">{message.subject}</h1>
+            <div className="flex items-start">
+              <Avatar className="h-12 w-12">
+                <AvatarImage src={message.avatar} alt={message.sender} />
+                <AvatarFallback>
+                  {message.sender.split(" ").map((n) => n[0]).join("")}
+                </AvatarFallback>
+              </Avatar>
+              <div className="ml-4">
+                <div className="flex items-center gap-2">
+                  <p className="font-medium">{message.sender}</p>
+                  <span className="text-sm text-muted-foreground">
+                    &lt;{message.email}&gt;
+                  </span>
                 </div>
-              ))}
+                <p className="text-sm text-muted-foreground">
+                  {message.date} at {message.time}
+                </p>
+              </div>
             </div>
           </div>
+
+          <div className="prose prose-sm max-w-none dark:prose-invert" dangerouslySetInnerHTML={{ __html: message.content }} />
+
+          {message.attachments.length > 0 && (
+            <div className="mt-6 border-t pt-6">
+              <h2 className="text-sm font-semibold mb-3">Attachments</h2>
+              <div className="grid gap-2">
+                {message.attachments.map((attachment) => (
+                  <div
+                    key={attachment.name}
+                    className="flex items-center justify-between rounded-lg border p-3"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium">{attachment.name}</span>
+                      <span className="text-sm text-muted-foreground">
+                        ({attachment.size})
+                      </span>
+                    </div>
+                    <Button variant="outline" size="sm">
+                      Download
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="mt-6 border-t pt-6">
+            <div className="flex items-center gap-2">
+              <Button variant="outline" className="gap-2" onClick={() => setShowReply(true)}>
+                <Reply className="h-4 w-4" />
+                Reply
+              </Button>
+              <Button variant="outline" className="gap-2" onClick={() => setShowForward(true)}>
+                <Forward className="h-4 w-4" />
+                Forward
+              </Button>
+            </div>
+          </div>
+        </Card>
+
+        {showReply && (
+          <MessageReply
+            originalMessage={{
+              sender: message.sender,
+              subject: message.subject,
+              date: message.date,
+              time: message.time,
+              content: message.content,
+            }}
+            onClose={() => setShowReply(false)}
+          />
         )}
 
-        <div className="mt-6 border-t pt-6">
-          <div className="flex items-center gap-2">
-            <Button variant="outline" className="gap-2" onClick={() => setShowReply(true)}>
-              <Reply className="h-4 w-4" />
-              Reply
-            </Button>
-            <Button variant="outline" className="gap-2">
-              <Forward className="h-4 w-4" />
-              Forward
-            </Button>
-            <Button variant="outline" className="gap-2">
-              <Smile className="h-4 w-4" />
-              React
-            </Button>
-            <Button variant="outline" className="gap-2">
-              <Share2 className="h-4 w-4" />
-              Share
-            </Button>
-          </div>
-        </div>
-      </Card>
-
-      {showReply && (
-        <MessageReply
-          originalMessage={{
-            sender: message.sender,
-            subject: message.subject,
-            date: message.date,
-            time: message.time,
-            content: message.content,
-          }}
-          onClose={() => setShowReply(false)}
-        />
-      )}
-    </div>
+        {showForward && (
+          <MessageForward
+            originalMessage={{
+              sender: message.sender,
+              subject: message.subject,
+              date: message.date,
+              time: message.time,
+              content: message.content,
+            }}
+            onClose={() => setShowForward(false)}
+          />
+        )}
+      </div>
     </Layout>
-  
   );
 }

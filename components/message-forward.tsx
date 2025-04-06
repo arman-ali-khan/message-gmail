@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Reply, X } from "lucide-react";
+import { Forward, X } from "lucide-react";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
+import { Input } from "./ui/input";
 
 const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
@@ -33,7 +34,7 @@ const formats = [
   "link",
 ];
 
-interface MessageReplyProps {
+interface MessageForwardProps {
   originalMessage: {
     sender: string;
     subject: string;
@@ -44,21 +45,21 @@ interface MessageReplyProps {
   onClose: () => void;
 }
 
-export function MessageReply({ originalMessage, onClose }: MessageReplyProps) {
-  const [content, setContent] = useState("");
+export function MessageForward({ originalMessage, onClose }: MessageForwardProps) {
+  const [content, setContent] = useState(`\n\n\n-------- Forwarded Message --------\nFrom: ${originalMessage.sender}\nDate: ${originalMessage.date} ${originalMessage.time}\nSubject: ${originalMessage.subject}\n\n${originalMessage.content}`);
 
   const handleSend = () => {
-    // Handle sending the reply
-    console.log("Sending reply:", content);
+    // Handle sending the forwarded message
+    console.log("Sending forwarded message:", content);
     onClose();
   };
 
   return (
-    <div className="fixed inset-x-0 z-50 bottom-0 bg-background border-t shadow-lg">
+    <div className="fixed z-50 inset-x-0 z-40 bottom-0 bg-background border-t shadow-lg">
       <div className="container mx-auto max-w-5xl">
         <div className="flex items-center justify-between p-2 border-b bg-muted/50">
           <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">Re:</span>
+            <span className="text-sm text-muted-foreground">Fwd:</span>
             <span className="text-sm font-medium truncate max-w-[300px] sm:max-w-[400px] md:max-w-[500px]">
               {originalMessage.subject}
             </span>
@@ -68,6 +69,12 @@ export function MessageReply({ originalMessage, onClose }: MessageReplyProps) {
           </Button>
         </div>
         <div className="p-4">
+          <div className="mb-4">
+            <Input 
+              placeholder="Enter recipient email or username" 
+              className="w-full"
+            />
+          </div>
           <div className="h-[40vh] min-h-[200px]">
             <ReactQuill
               theme="snow"
@@ -76,7 +83,6 @@ export function MessageReply({ originalMessage, onClose }: MessageReplyProps) {
               modules={modules}
               formats={formats}
               className="h-[calc(100%-50px)]"
-              placeholder={`Reply to ${originalMessage.sender}...`}
             />
           </div>
           <div className="flex justify-end gap-2 mt-4">
@@ -84,8 +90,8 @@ export function MessageReply({ originalMessage, onClose }: MessageReplyProps) {
               Cancel
             </Button>
             <Button onClick={handleSend}>
-              <Reply className="mr-2 h-4 w-4" />
-              Send Reply
+              <Forward className="mr-2 h-4 w-4" />
+              Forward
             </Button>
           </div>
         </div>

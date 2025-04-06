@@ -48,7 +48,7 @@ export function Sidebar() {
       <Button
         variant="ghost"
         size="icon"
-        className="fixed left-4 top-4 lg:hidden"
+        className="fixed left-4 z-[80] top-4 sm:hidden "
         onClick={() => setIsMobileOpen(!isMobileOpen)}
       >
         <Menu className="h-6 w-6" />
@@ -169,7 +169,7 @@ export function Sidebar() {
       {/* Overlay for mobile */}
       {isMobileOpen && (
         <div
-          className="fixed inset-0 z-20 bg-black/80 lg:hidden"
+          className="fixed inset-0 z-20 bg-black/80 sm:hidden"
           onClick={() => setIsMobileOpen(false)}
         />
       )}

@@ -181,7 +181,7 @@ export function MessageList({ currentFolder = "inbox" }) {
           <Button
             variant="ghost"
             size="icon"
-            className="hover:bg-gray-100 dark:hover:bg-gray-800"
+            className="hover:bg-gray-100 w-6 dark:hover:bg-gray-800"
           >
             <Checkbox 
               checked={selectedMessages.length === sortedMessages.length && sortedMessages.length > 0}
