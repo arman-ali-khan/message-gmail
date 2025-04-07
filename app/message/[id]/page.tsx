@@ -18,7 +18,7 @@ import {
 import { MessageReply } from "@/components/message-reply";
 import { MessageForward } from "@/components/message-forward";
 import { useState } from "react";
-import Layout from "@/app/message-layut";
+import Layout from "@/app/message-layout";
 
 const messages = [
   {

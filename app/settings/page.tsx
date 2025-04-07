@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import Layout from "../message-layout";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
@@ -14,11 +15,32 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { useTheme } from "next-themes";
 import Link from "next/link";
 import { useState } from "react";
 
 export default function SettingsPage() {
   const [loading, setLoading] = useState(false);
+  const { theme, setTheme } = useTheme();
+  const [blockedUsers] = useState([
+    { id: 1, name: "Jane Smith", email: "jane@example.com" },
+    { id: 2, name: "Bob Johnson", email: "bob@example.com" },
+  ]);
+  const [deletedMessages] = useState([
+    { id: 1, subject: "Old Project Files", date: "2024-03-01" },
+    { id: 2, subject: "Meeting Notes 2023", date: "2024-02-15" },
+  ]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,8 +51,18 @@ export default function SettingsPage() {
     }, 1000);
   };
 
+  const handleDeleteAccount = () => {
+    // Handle account deletion
+    console.log("Account deletion requested");
+  };
+
+  const handleUnblockUser = (userId: number) => {
+    // Handle unblocking user
+    console.log("Unblock user:", userId);
+  };
+
   return (
-    <div className="container mx-auto py-10">
+  <Layout>  <div className="container mx-auto py-10">
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
@@ -54,6 +86,42 @@ export default function SettingsPage() {
                   <AvatarFallback>JD</AvatarFallback>
                 </Avatar>
                 <Button variant="outline">Change Photo</Button>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Theme & Language */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium">Appearance & Language</h3>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label>Theme</Label>
+                  <Select value={theme} onValueChange={setTheme}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select theme" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="light">Light</SelectItem>
+                      <SelectItem value="dark">Dark</SelectItem>
+                      <SelectItem value="system">System</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Language</Label>
+                  <Select defaultValue="en">
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select language" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="en">English</SelectItem>
+                      <SelectItem value="es">Español</SelectItem>
+                      <SelectItem value="fr">Français</SelectItem>
+                      <SelectItem value="de">Deutsch</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </div>
 
@@ -115,96 +183,108 @@ export default function SettingsPage() {
 
             <Separator />
 
-            {/* Education */}
+            {/* Blocked Users */}
             <div className="space-y-4">
-              <h3 className="text-lg font-medium">Education</h3>
-              <div className="space-y-4">
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label>School/University</Label>
-                    <Input defaultValue="Stanford University" />
+              <h3 className="text-lg font-medium">Blocked Users</h3>
+              <div className="rounded-md border">
+                {blockedUsers.length > 0 ? (
+                  <div className="divide-y">
+                    {blockedUsers.map((user) => (
+                      <div
+                        key={user.id}
+                        className="flex items-center justify-between p-4"
+                      >
+                        <div>
+                          <p className="font-medium">{user.name}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {user.email}
+                          </p>
+                        </div>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleUnblockUser(user.id)}
+                        >
+                          Unblock
+                        </Button>
+                      </div>
+                    ))}
                   </div>
-                  <div className="space-y-2">
-                    <Label>Degree</Label>
-                    <Input defaultValue="Master's in Computer Science" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Year</Label>
-                    <Input defaultValue="2018-2020" />
-                  </div>
-                </div>
-                <Button variant="outline" type="button">Add Education</Button>
+                ) : (
+                  <p className="p-4 text-center text-muted-foreground">
+                    No blocked users
+                  </p>
+                )}
               </div>
             </div>
 
             <Separator />
 
-            {/* Experience */}
+            {/* Permanently Deleted Messages */}
             <div className="space-y-4">
-              <h3 className="text-lg font-medium">Experience</h3>
-              <div className="space-y-4">
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label>Company</Label>
-                    <Input defaultValue="Google" />
+              <h3 className="text-lg font-medium">Permanently Deleted Messages</h3>
+              <p className="text-sm text-muted-foreground">
+                These messages cannot be recovered
+              </p>
+              <div className="rounded-md border">
+                {deletedMessages.length > 0 ? (
+                  <div className="divide-y">
+                    {deletedMessages.map((message) => (
+                      <div
+                        key={message.id}
+                        className="flex items-center justify-between p-4"
+                      >
+                        <div>
+                          <p className="font-medium">{message.subject}</p>
+                          <p className="text-sm text-muted-foreground">
+                            Deleted on: {message.date}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                  <div className="space-y-2">
-                    <Label>Position</Label>
-                    <Input defaultValue="Senior Software Engineer" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Duration</Label>
-                    <Input defaultValue="2020 - Present" />
-                  </div>
-                </div>
-                <Button variant="outline" type="button">Add Experience</Button>
+                ) : (
+                  <p className="p-4 text-center text-muted-foreground">
+                    No permanently deleted messages
+                  </p>
+                )}
               </div>
             </div>
 
             <Separator />
 
-            {/* Skills */}
+            {/* Account Management */}
             <div className="space-y-4">
-              <h3 className="text-lg font-medium">Skills</h3>
-              <div className="space-y-4">
-                <div className="flex flex-wrap gap-2">
-                  {["JavaScript", "TypeScript", "React", "Node.js", "Python", "AWS"].map((skill) => (
-                    <div key={skill} className="flex items-center gap-2 rounded-full bg-secondary px-3 py-1">
-                      <span>{skill}</span>
-                      <button className="text-muted-foreground hover:text-foreground">&times;</button>
-                    </div>
-                  ))}
-                </div>
-                <div className="flex gap-2">
-                  <Input placeholder="Add a skill" />
-                  <Button type="button">Add</Button>
-                </div>
-              </div>
-            </div>
-
-            <Separator />
-
-            {/* Hobbies */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-medium">Hobbies</h3>
-              <div className="space-y-4">
-                <div className="flex flex-wrap gap-2">
-                  {["Photography", "Traveling", "Reading", "Hiking", "Gaming"].map((hobby) => (
-                    <div key={hobby} className="flex items-center gap-2 rounded-full bg-secondary px-3 py-1">
-                      <span>{hobby}</span>
-                      <button className="text-muted-foreground hover:text-foreground">&times;</button>
-                    </div>
-                  ))}
-                </div>
-                <div className="flex gap-2">
-                  <Input placeholder="Add a hobby" />
-                  <Button type="button">Add</Button>
-                </div>
-              </div>
+              <h3 className="text-lg font-medium">Account Management</h3>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="destructive">Delete Account</Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. This will permanently delete your
+                      account and remove all your data from our servers.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={handleDeleteAccount}
+                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    >
+                      Delete Account
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
 
             <div className="flex justify-end gap-4">
-              <Button variant="outline" type="button">Cancel</Button>
+              <Button variant="outline" type="button">
+                Cancel
+              </Button>
               <Button type="submit" disabled={loading}>
                 {loading ? "Saving..." : "Save Changes"}
               </Button>
@@ -212,6 +292,6 @@ export default function SettingsPage() {
           </form>
         </CardContent>
       </Card>
-    </div>
+    </div></Layout>
   );
 }

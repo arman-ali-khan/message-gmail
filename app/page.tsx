@@ -7,7 +7,7 @@ import { SearchDialog } from "@/components/search-dialog";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import { useState } from "react";
-import Layout from "./message-layut";
+import Layout from "./message-layout";
 
 export default function Home() {
   const [searchOpen, setSearchOpen] = useState(false);

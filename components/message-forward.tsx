@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Forward, X } from "lucide-react";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
-import { Input } from "./ui/input";
+import { UserSelect } from "./user-select";
 
 const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
@@ -47,6 +47,7 @@ interface MessageForwardProps {
 
 export function MessageForward({ originalMessage, onClose }: MessageForwardProps) {
   const [content, setContent] = useState(`\n\n\n-------- Forwarded Message --------\nFrom: ${originalMessage.sender}\nDate: ${originalMessage.date} ${originalMessage.time}\nSubject: ${originalMessage.subject}\n\n${originalMessage.content}`);
+  const [recipient, setRecipient] = useState("");
 
   const handleSend = () => {
     // Handle sending the forwarded message
@@ -55,7 +56,7 @@ export function MessageForward({ originalMessage, onClose }: MessageForwardProps
   };
 
   return (
-    <div className="fixed z-50 inset-x-0 z-40 bottom-0 bg-background border-t shadow-lg">
+    <div className="fixed inset-x-0 z-50 bottom-0 bg-background border-t shadow-lg">
       <div className="container mx-auto max-w-5xl">
         <div className="flex items-center justify-between p-2 border-b bg-muted/50">
           <div className="flex items-center gap-2">
@@ -70,10 +71,7 @@ export function MessageForward({ originalMessage, onClose }: MessageForwardProps
         </div>
         <div className="p-4">
           <div className="mb-4">
-            <Input 
-              placeholder="Enter recipient email or username" 
-              className="w-full"
-            />
+            <UserSelect onSelect={setRecipient} />
           </div>
           <div className="h-[40vh] min-h-[200px]">
             <ReactQuill

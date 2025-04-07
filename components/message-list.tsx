@@ -70,6 +70,54 @@ const initialMessages = [
     folder: "archive",
     unread: false,
   },
+  {
+    id: 4,
+    sender: "Marketing Team",
+    subject: "Newsletter Draft",
+    preview: "Review the latest newsletter draft...",
+    time: "Mar 12",
+    date: "Mar 12",
+    avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=32&h=32&q=80&fit=crop",
+    isStarred: false,
+    folder: "archive",
+    unread: false,
+  },
+  {
+    id: 4,
+    sender: "Marketing Team",
+    subject: "Newsletter Draft",
+    preview: "Review the latest newsletter draft...",
+    time: "Mar 12",
+    date: "Mar 12",
+    avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=32&h=32&q=80&fit=crop",
+    isStarred: false,
+    folder: "archive",
+    unread: false,
+  },
+  {
+    id: 4,
+    sender: "Marketing Team",
+    subject: "Newsletter Draft",
+    preview: "Review the latest newsletter draft...",
+    time: "Mar 12",
+    date: "Mar 12",
+    avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=32&h=32&q=80&fit=crop",
+    isStarred: false,
+    folder: "archive",
+    unread: false,
+  },
+  {
+    id: 4,
+    sender: "Marketing Team",
+    subject: "Newsletter Draft",
+    preview: "Review the latest newsletter draft...",
+    time: "Mar 12",
+    date: "Mar 12",
+    avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=32&h=32&q=80&fit=crop",
+    isStarred: false,
+    folder: "archive",
+    unread: false,
+  },
 ];
 
 export function MessageList({ currentFolder = "inbox" }) {
@@ -176,7 +224,7 @@ export function MessageList({ currentFolder = "inbox" }) {
 
   return (
     <div className="flex-1 flex flex-col">
-      <div className="flex items-center justify-between px-4 py-2 border-b">
+      <div className="flex bg-secondary sticky top-[75px] items-center z-50 justify-between px-4 py-2 border-b">
         <div className="flex items-center space-x-2">
           <Button
             variant="ghost"
@@ -266,20 +314,26 @@ export function MessageList({ currentFolder = "inbox" }) {
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1 space-y-1">
-                  <div className="flex items-center justify-between">
+                  <div className="flex lg:hidden items-center justify-between">
                     <p className="font-medium">{message.sender}</p>
                     <span className="text-sm text-muted-foreground">
                       {message.time}
                     </span>
                   </div>
-                  <p className={`line-clamp-1 text-sm ${message.unread ? "font-medium" : ""}`}>
+                 <div className="flex flex-col lg:flex-row lg:gap-4 lg:items-center"> 
+                   <div className="lg:flex gap-4 hidden items-center justify-between">
+                    <p className="font-medium">{message.sender}</p>
+                    <span className="text-sm text-muted-foreground">
+                      {message.time}
+                    </span>
+                  </div>  <p className={`line-clamp-1 text-sm ${message.unread ? "font-medium" : ""}`}>
                     {message.subject}
                   </p>
                   {!shortView && (
                     <p className="line-clamp-1 text-sm text-muted-foreground">
                       {message.preview}
                     </p>
-                  )}
+                  )}</div>
                 </div>
               </Link>
               <div className="flex items-center gap-2">

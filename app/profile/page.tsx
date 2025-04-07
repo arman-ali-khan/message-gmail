@@ -4,12 +4,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import Layout from "../message-layout";
 import { Camera, ChevronRight, MapPin, Building2, GraduationCap, Briefcase, Heart } from "lucide-react";
 import Link from "next/link";
 
 export default function ProfilePage() {
   return (
-    <div className="min-h-screen bg-background">
+   <Layout> <div className="min-h-screen bg-background">
       {/* Profile Header */}
       <div className="relative h-[200px] bg-primary">
         <div className="absolute inset-0">
@@ -155,6 +156,6 @@ export default function ProfilePage() {
           </Card>
         </div>
       </div>
-    </div>
+    </div></Layout>
   );
 }

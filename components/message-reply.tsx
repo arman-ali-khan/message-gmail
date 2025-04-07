@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Reply, X } from "lucide-react";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
+import { UserSelect } from "./user-select";
 
 const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
@@ -46,6 +47,7 @@ interface MessageReplyProps {
 
 export function MessageReply({ originalMessage, onClose }: MessageReplyProps) {
   const [content, setContent] = useState("");
+  const [recipient, setRecipient] = useState("");
 
   const handleSend = () => {
     // Handle sending the reply
@@ -68,6 +70,9 @@ export function MessageReply({ originalMessage, onClose }: MessageReplyProps) {
           </Button>
         </div>
         <div className="p-4">
+          <div className="mb-4">
+            <UserSelect onSelect={setRecipient} placeholder="Confirm recipient..." />
+          </div>
           <div className="h-[40vh] min-h-[200px]">
             <ReactQuill
               theme="snow"

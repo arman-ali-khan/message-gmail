@@ -45,3 +45,30 @@ export const searchData = [
     read: true,
   },
 ];
+
+export const users = [
+  {
+    id: 1,
+    name: "John Doe",
+    email: "john@example.com",
+    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&q=80&fit=crop"
+  },
+  {
+    id: 2,
+    name: "Sarah Wilson",
+    email: "sarah@example.com",
+    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=32&h=32&q=80&fit=crop"
+  },
+  {
+    id: 3,
+    name: "Mike Chen",
+    email: "mike@example.com",
+    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=32&h=32&q=80&fit=crop"
+  },
+  {
+    id: 4,
+    name: "Emily Brown",
+    email: "emily@example.com",
+    avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=32&h=32&q=80&fit=crop"
+  }
+];
