@@ -6,6 +6,7 @@ import { Forward, X } from "lucide-react";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 import { UserSelect } from "./user-select";
+import { users } from "@/lib/data";
 
 const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
@@ -71,7 +72,7 @@ export function MessageForward({ originalMessage, onClose }: MessageForwardProps
         </div>
         <div className="p-4">
           <div className="mb-4">
-            <UserSelect onSelect={setRecipient} />
+            <UserSelect users={users} onSelect={setRecipient} />
           </div>
           <div className="h-[40vh] min-h-[200px]">
             <ReactQuill
